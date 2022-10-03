@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchApi } from '../redux/actions';
+import { fetchApi, fetchAddGastos } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
-    despesa: '',
-    descricao: '',
+    value: '',
+    description: '',
     currency: 'USD',
-    pagamento: 'Dinheiro',
+    method: 'Dinheiro',
     tag: 'Alimentação',
   };
 
@@ -22,24 +22,46 @@ class WalletForm extends Component {
     this.setState({ [name]: value });
   };
 
+  handleClick = () => {
+    const { value, description, currency, method, tag } = this.state;
+    const { totalExpense, id } = this.props;
+    const itens = {
+      id,
+      value,
+      description,
+      currency,
+      method,
+      tag,
+    };
+    totalExpense(itens);
+    this.setState({
+      value: '',
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+    });
+  };
+
   render() {
-    const { descricao, despesa, currency, pagamento, tag } = this.state;
+    const { description, value, currency, method, tag } = this.state;
     const { currencies } = this.props;
     return (
       <div>
         <input
           type="number"
           data-testid="value-input"
-          value={ despesa }
-          name="despesa"
+          value={ value }
+          name="value"
           onChange={ (e) => this.handleChange(e) }
         />
 
         <input
           type="text"
           data-testid="description-input"
-          value={ descricao }
-          name="descricao"
+          value={ description }
+          name="description"
+          autoComplete="off"
           onChange={ (e) => this.handleChange(e) }
         />
 
@@ -56,8 +78,8 @@ class WalletForm extends Component {
 
         <select
           data-testid="method-input"
-          value={ pagamento }
-          name="pagamento"
+          value={ method }
+          name="method"
           onChange={ (e) => this.handleChange(e) }
         >
           <option>Dinheiro</option>
@@ -77,6 +99,13 @@ class WalletForm extends Component {
           <option>Transporte</option>
           <option>Saúde</option>
         </select>
+
+        <button
+          type="button"
+          onClick={ this.handleClick }
+        >
+          Adicionar despesas
+        </button>
       </div>
     );
   }
@@ -84,15 +113,19 @@ class WalletForm extends Component {
 
 const mapStateToProps = ({ wallet }) => ({
   currencies: wallet.currencies,
+  id: wallet.expenses?.length || 0,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   moedasFetch: () => dispatch(fetchApi()),
+  totalExpense: (gastos) => dispatch(fetchAddGastos(gastos)),
 });
 
 WalletForm.propTypes = {
   currencies: PropTypes.instanceOf(Array),
   moedasFetch: PropTypes.func,
+  totalExpense: PropTypes.func,
+  id: PropTypes.number,
 }.isRequired;
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);
