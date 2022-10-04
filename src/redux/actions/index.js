@@ -2,6 +2,7 @@ export const GET_USER = 'GET_USER';
 export const GET_WALLET = 'GET_WALLET';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
 export const GET_EXCHANGES = 'GET_EXCHANGES';
+export const REMOVE_EXPENSE = 'REMOVE_EXPENSE';
 
 export const getUser = (email) => ({
   type: GET_USER,
@@ -18,6 +19,11 @@ export const addExpenses = (expense, element) => ({
   payload: { ...expense,
     exchangeRates: element,
   },
+});
+
+export const removExpense = (expenses) => ({
+  type: REMOVE_EXPENSE,
+  expenses,
 });
 
 export function fetchAddGastos(expense) {

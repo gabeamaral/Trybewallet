@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { removExpense } from '../redux/actions';
 
 class Table extends Component {
   valueCalc = (ask) => {
@@ -11,6 +12,14 @@ class Table extends Component {
   valueCalc2 = (value, ask) => {
     const resultado = Number(ask) * Number(value);
     return Number(resultado).toFixed(2);
+  };
+
+  handleClick = (id) => {
+    const { expenses, dispatch } = this.props;
+    const removeItem = expenses.filter((expense) => (
+      expense.id !== id
+    ));
+    dispatch(removExpense(removeItem));
   };
 
   render() {
@@ -31,8 +40,8 @@ class Table extends Component {
 
         <tbody>
           {
-            expenses.map((e, index) => (
-              <tr key={ index }>
+            expenses.map((e) => (
+              <tr key={ e.id }>
                 <td>{e.description}</td>
                 <td>{e.tag}</td>
                 <td>{e.method}</td>
@@ -41,6 +50,15 @@ class Table extends Component {
                 <td>{this.valueCalc(e.exchangeRates[e.currency].ask)}</td>
                 <td>{this.valueCalc2(e.value, e.exchangeRates[e.currency].ask)}</td>
                 <td>Real</td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={ () => this.handleClick(e.id) }
+                    data-testid="delete-btn"
+                  >
+                    Excluir
+                  </button>
+                </td>
               </tr>
             ))
           }
