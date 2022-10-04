@@ -27,6 +27,7 @@ class Login extends React.Component {
           type="email"
           data-testid="email-input"
           value={ email }
+          placeholder="Email"
           onChange={ ({ target: { value } }) => this.setState({ email: value }) }
         />
 
@@ -34,6 +35,7 @@ class Login extends React.Component {
           type="password"
           data-testid="password-input"
           value={ password }
+          placeholder="Senha"
           onChange={ ({ target: { value } }) => this.setState({ password: value }) }
         />
 

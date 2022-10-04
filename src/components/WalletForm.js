@@ -53,6 +53,7 @@ class WalletForm extends Component {
           data-testid="value-input"
           value={ value }
           name="value"
+          placeholder="Valor"
           onChange={ (e) => this.handleChange(e) }
         />
 
